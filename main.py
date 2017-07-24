@@ -128,12 +128,14 @@ def upload_video(videos):
 def upload_transcript(transcripts):
 
 	
-	if transcript['filename'] == '':
-		print 'no filename specified for transcript at excel id: ' + transcript['id']
-		continue
-
 	for transcript in transcripts:
 		filename_template = os.path.join(transcript['file_dir'],transcript['filename'])
+
+
+		if transcript['filename'] == '':
+			print 'no filename specified for transcript at excel id: ' + str(transcript['id'])
+			continue
+
 
 		for e_ext in CAPTIONEXTENSION:
 			if e_ext in filename_template and os.path.isfile(filename_template):
