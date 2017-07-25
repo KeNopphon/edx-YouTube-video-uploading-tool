@@ -49,13 +49,19 @@ THUMBNAILVIDEOID = 3
 
 
 
-EXCELFILE = "upload_list.xls"
+EXCELFILE = os.path.join("materials","upload_list.xls")
 wb = xlrd.open_workbook(EXCELFILE)
 
 CAPTIONEXTENSION = {'.srt'}
 
 
 
+def secret_client_file():
+	for file in os.listdir('./materials'):
+		if file.endswith(".json"):
+			selected_id = os.path.join("materials",file)
+			print('client_secret_id : ',selected_id)
+			return selected_id
 
 def read_xlm(task_flag):
 	
@@ -96,6 +102,7 @@ def read_xlm(task_flag):
 			name_ = sheetstruc.cell_value(row,CAPTIONNAME)
 			videoid_ = sheetstruc.cell_value(row,CAPTIONVIDEOID)
 			videoid_ = re.sub(r'\S+be/', '', videoid_)
+			videoid_ = re.sub(' ','',videoid_)
 			
 			all_data.append({'row':row,
 				'id': idx_,
@@ -135,7 +142,7 @@ def read_xlm(task_flag):
 def upload_video(videos):
 
 	for video in videos:
-		filename_template = os.path.join(video['file_dir'],video['filename'])
+		filename_template = os.path.join("materials",video['file_dir'],video['filename'])
 		upload_command_template = 'python upload_video.py --file='+ filename_template  
 		if video['title'] != "":
 			upload_command_template = upload_command_template + " --title=" + str((video['title'])) 
@@ -157,7 +164,7 @@ def upload_transcript(transcripts):
 
 	
 	for transcript in transcripts:
-		filename_template = os.path.join(transcript['file_dir'],transcript['filename'])
+		filename_template = os.path.join("materials",transcript['file_dir'],transcript['filename'])
 
 
 		if transcript['filename'] == '':
@@ -173,7 +180,7 @@ def upload_transcript(transcripts):
 				filename_template = newfile
 
 
-		upload_command_template = 'python upload_caption.py --videoid='+ str(transcript['videoid'])  + ' --file='+filename_template
+		upload_command_template = 'python upload_caption.py --videoid='+ str(transcript['videoid']) + ' --file='+filename_template
 
 		if transcript['name'] != "":
 			upload_command_template = upload_command_template + " --name=" + str((transcript['name'])) 
@@ -192,7 +199,7 @@ def upload_transcript(transcripts):
 def upload_thumbnail(thumbnails):
 
 	for thumbnail in thumbnails:
-		filename_template = os.path.join(thumbnail['file_dir'],thumbnail['filename'])
+		filename_template = os.path.join("materials",thumbnail['file_dir'],thumbnail['filename'])
 		upload_command_template = 'python upload_thumbnails.py --file '+ filename_template + ' --video-id '+ str(thumbnail['videoid']) 
 		
 		print("---------------------------------start uploading thumbnail:  " + thumbnail['filename'] + "---------------------------------")
@@ -205,7 +212,7 @@ def upload_thumbnail(thumbnails):
 
 def output_video_list(title,youtube_id):
 
-	output_name = 'uploaded_video_link.txt' 
+	output_name = './materials/uploaded_video_link.txt' 
 	file = open(output_name,'a')
 	file.write( datetime.now().strftime('%Y-%m-%d %H:%M:%S') +' , '+title+' , '+'https://youtu.be/'+youtube_id+'\n')
 	file.close()
@@ -216,6 +223,7 @@ def output_video_list(title,youtube_id):
 def main():
 	flag = 0
 	global file
+	
 	while(flag==0):
 		command = raw_input("enter [1-3]\n1.Upload video\n2.Upload Caption\n3.Upload thumbnail\n")
 		if command == '1':

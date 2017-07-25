@@ -14,6 +14,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 from main import output_video_list
+from main import secret_client_file
 
 # Explicitly tell the underlying HTTP transport library not to retry, since
 # we are handling retry logic ourselves.
@@ -43,7 +44,8 @@ RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 # For more information about the client_secrets.json file format, see:
 #   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
 
-CLIENT_SECRETS_FILE = "client_secret_467836083994-la6a1ker3ae3vkc1i4ikrab9mvckntq1.apps.googleusercontent.com.json" # nopphon id
+CLIENT_SECRETS_FILE = secret_client_file()
+#CLIENT_SECRETS_FILE = "client_secret_467836083994-la6a1ker3ae3vkc1i4ikrab9mvckntq1.apps.googleusercontent.com.json" # nopphon id
 #CLIENT_SECRETS_FILE = "client_secret_96004811556-ibqgvbkddqi99cl1arqf9gabgmtcbuoi.apps.googleusercontent.com.json"  # odeo id
 
 # This OAuth 2.0 access scope allows an application to upload files to the
