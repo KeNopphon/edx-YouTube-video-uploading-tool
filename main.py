@@ -37,6 +37,18 @@ CAPTIONNAME = 4
 CAPTIONVIDEOID = 5
 
 
+"""
+	sheet-> Upload thumbnail
+"""
+
+THUMBNAILSHEET = "thumbnail_list"
+THUMBNAILINDEX = 0
+THUMBNAILFILEDIR = 1
+THUMBNAILFILENAME = 2
+THUMBNAILVIDEOID = 3
+
+
+
 EXCELFILE = "upload_list.xls"
 wb = xlrd.open_workbook(EXCELFILE)
 
@@ -93,7 +105,23 @@ def read_xlm(task_flag):
 				'name': name_,
 				'videoid': videoid_})
 
+	elif task_flag == '3':
+		print('---------------------------------Import list of thumbnails info from excel file----------------------------\n\n')
+	
+		sheetstruc = wb.sheet_by_name(THUMBNAILSHEET)
+		for row in range(1, sheetstruc.nrows):
 
+			idx_ = sheetstruc.cell_value(row,THUMBNAILINDEX)
+			filedir_ = sheetstruc.cell_value(row,THUMBNAILFILEDIR)
+			filename_ = sheetstruc.cell_value(row,THUMBNAILFILENAME)
+			videoid_ = sheetstruc.cell_value(row,THUMBNAILVIDEOID)
+			videoid_ = re.sub(r'\S+be/', '', videoid_)
+			
+			all_data.append({'row':row,
+				'id': idx_,
+				'file_dir': filedir_,
+				'filename': filename_,
+				'videoid': videoid_})
 	else:
 		print("wrong task flag")
 		exit()
@@ -159,6 +187,22 @@ def upload_transcript(transcripts):
 		print('-------------------------------------------------------------------------------------------------------\n')
 		os.rename(filename_template,tmp)
 
+
+
+def upload_thumbnail(thumbnails):
+
+	for thumbnail in thumbnails:
+		filename_template = os.path.join(thumbnail['file_dir'],thumbnail['filename'])
+		upload_command_template = 'python upload_thumbnails.py --file '+ filename_template + ' --video-id '+ str(thumbnail['videoid']) 
+		
+		print("---------------------------------start uploading thumbnail:  " + thumbnail['filename'] + "---------------------------------")
+		print(upload_command_template)
+		os.system(upload_command_template)
+		print('-------------------------------------------------------------------------------------------------------\n')
+
+
+
+
 def output_video_list(title,youtube_id):
 
 	output_name = 'uploaded_video_link.txt' 
@@ -173,7 +217,7 @@ def main():
 	flag = 0
 	global file
 	while(flag==0):
-		command = raw_input("enter [1-2]\n1.Upload video\n2.Upload Caption\n")
+		command = raw_input("enter [1-3]\n1.Upload video\n2.Upload Caption\n3.Upload thumbnail\n")
 		if command == '1':
 			print ('the Upload video task is chosen')
 			all_videos = read_xlm(command)
@@ -183,6 +227,11 @@ def main():
 			print ('the Upload Caption task is chosen')
 			all_transcripts = read_xlm(command)
 			upload_transcript(all_transcripts)
+			flag = 1
+		elif command == '3':
+			print ('the Upload thumbnail task is chosen')
+			all_thumbnails = read_xlm(command)
+			upload_thumbnail(all_thumbnails)
 			flag = 1
 		else:
 			print ('wrong command, try again!!!!')
