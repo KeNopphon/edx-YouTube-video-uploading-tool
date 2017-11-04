@@ -8,11 +8,12 @@ Please see the pptx of pdf file for further instruction
 
 1) a Python script which was developed based on YouTube data API provided by Google. So far, it has 3 functions, uploading videos, subtitles, and Thumbnails.
 2) an macro-excel file where information about video files (ex. mp4, wmv, etc.), subtitle fils(ex. srt, vtt,etc.), and thumbnail(ex. png, jpg) are contained according to the format prepared.
-3) a credential file of your YouTube account. To upload videos with this tool, however, it needs the credential file for authorization. More detail of how to obtain the credential, please look at https://developers.google.com/youtube/registering_an_application
+3) a credential file of your YouTube account. To upload videos with this tool, however, it needs the credential file for authorization. Click [here](https://developers.google.com/youtube/registering_an_application
+) for more detail of how to obtain the credential
 
 # dependencies
 - xlrd, xlwt, http.client, httplib2
-- Library: Google API Client Libraries https://developers.google.com/api-client-library/python/start/installation
+- [Google API Client Libraries](https://developers.google.com/api-client-library/python/start/installation)
 
 # test environment
 Python 3 run on Windows 10 
